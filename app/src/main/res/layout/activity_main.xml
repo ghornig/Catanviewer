@@ -10,8 +10,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.graham.catanviewer.MainActivity">
 
-    <TextView
+    <Button
+        android:text="New Configuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:id="@+id/button"
+        android:onClick="generateLayout" />
 </RelativeLayout>

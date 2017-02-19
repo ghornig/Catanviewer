@@ -7,12 +7,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.example.graham.catanviewer.R;
+
+import java.util.Random;
 
 public class MainActivity extends Activity {
 
@@ -55,18 +59,43 @@ public class MainActivity extends Activity {
 
         mInteractiveView.addView(lImageView);
 
-        int hexSide = 50;
+
+        final Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+                                      public void onClick(View v) {
+                                          generateLayout();
+                                      }
+                                  });
+
+        generateLayout();
+
+
+    }
+
+    private void generateLayout() {
+
+        int tileW = 150;
+        int hexSide = tileW/2;
         // For testing:
-        int[] tileID = {1, 3, 0, 1, 3, 4, 0, 2, 1, 3, 0, 2, 3, 4, 1, 0, 0, 1};
+        int originX = 300;
+        int originY = 700;
+        int[] tileID = new int[19];
+        Random rand = new Random();
+        for (int j =0; j < 19; j++) {
+            tileID[j] = rand.nextInt(6); // SHould be 7, removed gold for demo cause it was too frequent and weird
+        }
+        // int[] tileID = {1, 3, 0, 1, 3, 4, 0, 2, 1, 3, 0, 2, 3, 4, 1, 0, 0, 1, 2};
         int[] position;
         // Put together the board depending on the configuration
         Log.d("notag", "Beginning to place element...");
-        for (int i = 0; i <= lastTile("basic"); i++) {
+        for (int i = 0; i < 19; i++) {
             position = getTileCoord("basic", i, hexSide);
             // Adding a tile we can move on the top of the board (defined below)
-            addElement(position[0], position[1], tileID[i]);
+            addElement(position[0]+originX, position[1]+originY, tileID[i]);
         }
+
     }
+
 
     // Creation of a smaller element
     private void addElement(int pPosX, int pPosY, int tileID) {
@@ -92,23 +121,27 @@ public class MainActivity extends Activity {
     private int[] getTileCoord(String boardConfig, int tileNo, int hexSide) {
         int xCoord = 0;
         int yCoord = 0;
+        float borderXpercent = 26/2000;
+        float borderYpercent = 33/1730;
+        int tileW = 150;
         switch (boardConfig) {
             case "basic":
                 if (tileNo <= 2) {
-                    xCoord = (int) (tileNo * (3 / 2) * hexSide);
-                    yCoord = (int) (tileNo * (Math.sqrt(3) / 2 * hexSide));
+                    xCoord = (int) (tileNo * (1.5) * hexSide) - (int)(tileNo*borderXpercent*tileW);
+                    yCoord = (int) (tileNo * -(Math.sqrt(3) /2 * hexSide)-(int)(tileNo*borderYpercent*(tileW * Math.sqrt(3)/2)));
                 } else if ((tileNo <= 6) && (tileNo >= 3)) {
-                    xCoord = (int) ((tileNo - 3) * (3 / 2) * hexSide);
-                    yCoord = (int) ((tileNo - 3) * (Math.sqrt(3) / 2 * hexSide) - Math.sqrt(3) * hexSide);
+                    xCoord = (int) ((tileNo - 3) * (1.5) * hexSide)- (int)(tileNo*borderXpercent*tileW);
+                    yCoord = (int) (((tileNo - 3) * -(Math.sqrt(3)/2 * hexSide) + Math.sqrt(3) * hexSide)-(int)(tileNo*borderYpercent*(tileW * Math.sqrt(3)/2)));
                 } else if ((tileNo <= 11) && (tileNo >= 7)) {
-                    xCoord = (int) ((tileNo - 7) * (3 / 2) * hexSide);
-                    yCoord = (int) ((tileNo - 7) * (Math.sqrt(3) / 2 * hexSide) - 2 * Math.sqrt(3) * hexSide);
+                    xCoord = (int) ((tileNo - 7) * (1.5) * hexSide)- (int)(tileNo*borderXpercent*tileW);
+                    yCoord = (int) ((tileNo - 7) * -(Math.sqrt(3)/2 * hexSide) + 2 * Math.sqrt(3) * hexSide)-(int)(tileNo*borderYpercent*(tileW * Math.sqrt(3)/2));
                 } else if ((tileNo <= 15) && (tileNo >= 12)) {
-                    xCoord = (int) ((tileNo - 15 + 1) * (3 / 2) * hexSide);
-                    yCoord = (int) ((tileNo - 15 - 1) * (Math.sqrt(3) / 2 * hexSide) - 2 * Math.sqrt(3) * hexSide);
-                } else if ((tileNo <= 12) && (tileNo >= 16)) {
-                    xCoord = (int) ((tileNo - 16 + 2) * (3 / 2) * hexSide);
-                    yCoord = (int) ((tileNo - 15 - 2) * (Math.sqrt(3) / 2 * hexSide) - 2 * Math.sqrt(3) * hexSide);
+                    xCoord = (int) ((tileNo - 12 + 1) * (1.5) * hexSide)- (int)(tileNo*borderXpercent*tileW);
+                    yCoord = (int) ((tileNo - 12 - 1) * -(Math.sqrt(3) / 2 * hexSide) + 2 * Math.sqrt(3) * hexSide)-(int)(tileNo*borderYpercent*(tileW * Math.sqrt(3)/2));
+                } else if ((tileNo <= 18) && (tileNo >= 16)) {
+                    xCoord = (int) ((tileNo - 16 + 2) * (1.5) * hexSide) - (int) (tileNo * borderXpercent * tileW);
+                    yCoord = (int) ((tileNo - 16 - 2) * -(Math.sqrt(3) / 2 * hexSide) + 2 * Math.sqrt(3) * hexSide) - (int) (tileNo * borderYpercent * (tileW * Math.sqrt(3) / 2));
+
                 } else {
                     // Error
                 }
@@ -162,7 +195,7 @@ public class MainActivity extends Activity {
         }
 
         Bitmap lSourceImage = BitmapFactory.decodeResource(getResources(), resourceID);
-        int tileW = 100;
+        int tileW = 150;
         Bitmap lImage = Bitmap.createScaledBitmap(lSourceImage, tileW, (int) (tileW * Math.sqrt(3) / 2), true);
 
         return lImage;
