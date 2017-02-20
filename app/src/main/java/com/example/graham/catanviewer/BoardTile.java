@@ -22,7 +22,7 @@ public class BoardTile extends View
     {
         super(context);
         mRegion = new Region();
-        this.setOnTouchListener(mTouchListener);
+        // this.setOnTouchListener(mTouchListener);
     }
 
     public final Bitmap getImage() { return mCardImage; }
@@ -61,7 +61,8 @@ public class BoardTile extends View
 
     public final Point getSize() { return mSize; }
 
-    public OnTouchListener mTouchListener = new  OnTouchListener(){
+    // All of the touch interactions. Also uncomment line ~25
+/*    public OnTouchListener mTouchListener = new  OnTouchListener(){
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
@@ -98,5 +99,5 @@ public class BoardTile extends View
                 return false;
             }
         }
-    };
+    };*/
 }
